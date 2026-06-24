@@ -230,7 +230,7 @@ const driverDetails = {
 };
 
 
-fetch("http://localhost:8080/api/drivers")
+fetch("/api/drivers")
     .then(response => response.json())
     .then(drivers => {
 
@@ -279,7 +279,7 @@ fetch("http://localhost:8080/api/drivers")
                         : max
             );
 
-        fetch("http://localhost:8080/api/constructors")
+        fetch("/api/constructors")
             .then(response => response.json())
             .then(constructors => {
 
@@ -505,7 +505,7 @@ function updateCountdown(){
 updateCountdown();
 
 fetch(
-    "http://localhost:8080/api/drivers/race-info"
+    "/api/drivers/race-info"
 )
     .then(response => response.json())
     .then(race => {
@@ -539,7 +539,7 @@ setInterval(
     1000
 );
 
-fetch("http://localhost:8080/api/constructors")
+fetch("/api/constructors")
     .then(response => response.json())
     .then(constructors => {
 

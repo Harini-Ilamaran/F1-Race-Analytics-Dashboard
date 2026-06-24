@@ -69,7 +69,7 @@ async function simulatePitStop() {
 
     let response =
         await fetch(
-            "http://localhost:8080/api/pitstop",
+            "/api/pitstop",
             {
                 method: "POST",
 

@@ -1,6 +1,6 @@
 let drivers = [];
 
-fetch("http://localhost:8080/api/drivers")
+fetch("/api/drivers")
 
     .then(response => response.json())
 
@@ -77,7 +77,7 @@ async function buildFantasyTeam(){
 
     let response =
         await fetch(
-            "http://localhost:8080/api/fantasy",
+            "/api/fantasy",
             {
                 method:"POST",
 

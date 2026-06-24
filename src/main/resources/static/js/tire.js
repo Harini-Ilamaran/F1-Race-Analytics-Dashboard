@@ -7,7 +7,7 @@ async function predictTire() {
 
     let response =
         await fetch(
-            "http://localhost:8080/api/tire",
+            "/api/tire",
             {
                 method: "POST",
 

@@ -39,7 +39,7 @@ function getLogo(teamName){
     return logos[teamName];
 }
 
-fetch("http://localhost:8080/api/constructors")
+fetch("/api/constructors")
     .then(response => response.json())
     .then(data => {
 

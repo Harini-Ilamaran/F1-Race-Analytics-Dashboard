@@ -16,7 +16,7 @@ const teamColors = {
 
 let allDrivers = [];
 
-fetch("http://localhost:8080/api/drivers")
+fetch("/api/drivers")
 
     .then(response => response.json())
 
