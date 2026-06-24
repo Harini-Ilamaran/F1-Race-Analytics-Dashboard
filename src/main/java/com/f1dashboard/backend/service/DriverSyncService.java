@@ -350,9 +350,20 @@ public class DriverSyncService {
 
         catch(Exception e){
 
-            e.printStackTrace();
+            Map<String,Object> error =
+                    new HashMap<>();
 
-            return new HashMap<>();
+            error.put(
+                    "error",
+                    e.getClass().getName()
+            );
+
+            error.put(
+                    "message",
+                    e.getMessage()
+            );
+
+            return error;
         }
     }
 
