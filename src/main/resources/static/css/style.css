@@ -163,7 +163,7 @@ button{
 }
 
 .page-banner h2{
-    font-size:40px;
+    font-size:38px;
     margin-bottom:10px;
 }
 
@@ -178,6 +178,22 @@ button{
     border-left:5px solid #c40000;
     width:500px;
     margin:30px auto;
+}
+
+#pitResults1, #pitResults2{
+    padding:20px;
+    background:#222;
+    border-left:5px solid #c40000;
+    width:85%;
+    margin:30px auto;
+}
+
+#watch-live1, #watch-live2{
+    padding:20px;
+    background:#222;
+    border-left:5px solid #c40000;
+    width:100%;
+    margin:20px auto;
 }
 
 .table-section{
@@ -729,7 +745,7 @@ tbody td{
 
 .leader-card p{
     margin-top:25px;
-    font-size:20px;
+    font-size:18px;
 }
 
 .leader-card{
@@ -918,9 +934,9 @@ table{
 }
 
 .summary-card p{
-    font-size:20px;
+    font-size:18px;
     line-height:1.6;
-    text-align: justify;
+    text-align: center;
     letter-spacing: 0.4px;
 }
 
@@ -1008,6 +1024,14 @@ table{
 
     #driverCards{
         grid-template-columns:1fr;
+    }
+
+    .compare-driver-card h3{
+        font-size: 26px;
+    }
+
+    .compare-driver-card p{
+        font-size: 18px;
     }
 }
 
@@ -1463,7 +1487,7 @@ table{
 }
 
 .recommended-stratergy{
-    font-size: 32px;
+    font-size: 28px;
     color: #c40000;
 }
 

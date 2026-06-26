@@ -106,9 +106,54 @@ async function simulatePitStop() {
         `;
 }
 
+async function updateTyreAnalysis(tireCode){
+
+    let response =
+        await fetch(
+            "/api/tire",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    tireType:tireCode
+
+                })
+            }
+        );
+
+    let result =
+        await response.json();
+
+    document.getElementById(
+        "tyreAnalysis"
+    ).innerHTML =
+
+        `
+        <strong>Performance Decline:</strong>
+        ${result.performanceDecline}
+
+        <br><br>
+
+        <strong>Tyre Life:</strong>
+        ${result.tireLife}
+
+        <br><br>
+
+        <strong>Recommended Pit Window:</strong>
+        ${result.pitWindow}
+        `;
+}
+
 function updateTyreCard(){
 
     const center = tyres[currentTyre];
+
+    updateTyreAnalysis(center.code);
 
     const left =
         tyres[

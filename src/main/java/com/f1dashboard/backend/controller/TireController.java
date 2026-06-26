@@ -31,10 +31,28 @@ public class TireController {
                 pitWindow = "Lap 20";
                 break;
 
-            default:
+            case "HARD":
                 performanceDecline = "Low";
                 tireLife = "35 Laps";
                 pitWindow = "Lap 28";
+                break;
+
+            case "INTERMEDIATE":
+                performanceDecline = "Medium";
+                tireLife = "20 Laps";
+                pitWindow = "Lap 17";
+                break;
+
+            case "FULL_WET":
+                performanceDecline = "Medium-High";
+                tireLife = "18 Laps";
+                pitWindow = "Lap 15";
+                break;
+
+            default:
+                performanceDecline = "Unknown";
+                tireLife = "N/A";
+                pitWindow = "N/A";
         }
 
         return new TireResponse(
