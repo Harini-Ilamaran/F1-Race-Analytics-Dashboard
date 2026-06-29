@@ -18,6 +18,11 @@ public class Constructor {
 
     private String nationality;
 
+    private double cost;
+
+    @Column(name = "image_file")
+    private String imageFile;
+
     public Constructor() {
     }
 
@@ -59,6 +64,22 @@ public class Constructor {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public String getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(String imageFile) {
+        this.imageFile = imageFile;
     }
 
 

@@ -9,8 +9,14 @@ import com.f1dashboard.backend.repository.DriverRepository;
 import com.f1dashboard.backend.entity.Driver;
 import org.springframework.scheduling.annotation.Scheduled;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class DriverSyncService {
@@ -18,7 +24,7 @@ public class DriverSyncService {
     @Autowired
     private RestTemplate restTemplate;
 
-//    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 3600000)
 
     public void syncDrivers() {
 
@@ -66,6 +72,24 @@ public class DriverSyncService {
                             .get(0)
                             .path("DriverStandings");
 
+            Map<String, Driver> driversByCode = new HashMap<>();
+
+            List<Driver> updatedDrivers = new ArrayList<>();
+
+            driverRepository.findAll().forEach(driver ->
+                    driversByCode.put(driver.getDriverCode(), driver)
+            );
+
+            int leaderPoints =
+                    standings.get(0)
+                            .path("points")
+                            .asInt();
+
+            int highestWins = 0;
+            int highestPodiums = 0;
+            int highestPoles = 0;
+            int highestFastestLaps = 0;
+
             JsonNode races =
                     raceRoot.path("MRData")
                             .path("RaceTable")
@@ -76,26 +100,13 @@ public class DriverSyncService {
                             .path("RaceTable")
                             .path("Races");
 
-            System.out.println("Total races = " + races.size());
+            driversByCode.values().forEach(d -> {
 
-            for(JsonNode race : races){
-                System.out.println(
-                        race.path("raceName").asText()
-                );
-            }
+                d.setPodiums(0);
+                d.setPoles(0);
+                d.setFastestLaps(0);
 
-            driverRepository.findAll()
-                    .forEach(d -> {
-
-                        d.setPodiums(0);
-
-                        d.setPoles(0);
-
-                        d.setFastestLaps(0);
-
-                        driverRepository.save(d);
-
-                    });
+            });
 
             for(JsonNode race : races){
 
@@ -108,12 +119,6 @@ public class DriverSyncService {
                             result.path("position")
                                     .asInt();
 
-                    if(position == 1){
-
-                        System.out.println(
-                                result.toPrettyString()
-                        );
-                    }
 
                     if(position <= 3){
 
@@ -122,21 +127,14 @@ public class DriverSyncService {
                                         .path("code")
                                         .asText();
 
-                        System.out.println(
-                                code + " - Position: " + position
-                        );
 
-                        Driver driver =
-                                driverRepository
-                                        .findByDriverCode(code);
+                        Driver driver = driversByCode.get(code);
 
                         if(driver != null){
 
                             driver.setPodiums(
                                     driver.getPodiums() + 1
                             );
-
-                            driverRepository.save(driver);
 
                         }
                     }
@@ -162,9 +160,7 @@ public class DriverSyncService {
                                         .path("code")
                                         .asText();
 
-                        Driver driver =
-                                driverRepository
-                                        .findByDriverCode(code);
+                        Driver driver = driversByCode.get(code);
 
                         if(driver != null){
 
@@ -172,12 +168,6 @@ public class DriverSyncService {
                                     driver.getFastestLaps() + 1
                             );
 
-                            driverRepository.save(driver);
-
-                            System.out.println(
-                                    "Fastest Lap: "
-                                            + driver.getName()
-                            );
                         }
                     }
                 }
@@ -198,9 +188,7 @@ public class DriverSyncService {
                                     .path("code")
                                     .asText();
 
-                    Driver driver =
-                            driverRepository
-                                    .findByDriverCode(code);
+                    Driver driver = driversByCode.get(code);
 
                     if(driver != null){
 
@@ -208,14 +196,21 @@ public class DriverSyncService {
                                 driver.getPoles() + 1
                         );
 
-                        driverRepository.save(driver);
 
-                        System.out.println(
-                                "Pole: " +
-                                        driver.getName()
-                        );
                     }
                 }
+            }
+
+            for (Driver d : driversByCode.values()) {
+
+                highestWins = Math.max(highestWins, d.getWins());
+
+                highestPodiums = Math.max(highestPodiums, d.getPodiums());
+
+                highestPoles = Math.max(highestPoles, d.getPoles());
+
+                highestFastestLaps = Math.max(highestFastestLaps, d.getFastestLaps());
+
             }
 
             for(JsonNode standing : standings){
@@ -238,9 +233,7 @@ public class DriverSyncService {
                                 .path("nationality")
                                 .asText();
 
-                Driver driver =
-                        driverRepository
-                                .findByDriverCode(code);
+                Driver driver = driversByCode.get(code);
 
                 if(driver != null){
 
@@ -250,15 +243,28 @@ public class DriverSyncService {
 
                     driver.setNationality(nationality);
 
-                    driverRepository.save(driver);
-
-                    System.out.println(
-                            "Updated: "
-                                    + driver.getName()
+                    updateFantasyPrice(
+                            driver,
+                            leaderPoints,
+                            highestWins,
+                            highestPodiums,
+                            highestPoles,
+                            highestFastestLaps,
+                            points,
+                            wins,
+                            driver.getPodiums(),
+                            driver.getPoles(),
+                            driver.getFastestLaps()
                     );
+
+                    updatedDrivers.add(driver);
+
                 }
 
             }
+
+            driverRepository.saveAll(updatedDrivers);
+
             System.out.println(
                     "Driver Sync Completed"
             );
@@ -290,8 +296,8 @@ public class DriverSyncService {
                             .path("RaceTable")
                             .path("Races");
 
-            LocalDate today =
-                    LocalDate.now();
+            LocalDateTime now =
+                    LocalDateTime.now();
 
             int racesCompleted = 0;
 
@@ -299,20 +305,34 @@ public class DriverSyncService {
 
             for(JsonNode race : races){
 
-                LocalDate raceDate =
-                        LocalDate.parse(
-                                race.path("date").asText()
+                String raceDate =
+                        race.path("date").asText();
+
+                String raceTime =
+                        race.path("time").asText();
+
+                OffsetDateTime raceDateTime =
+                        OffsetDateTime.parse(
+                                raceDate + "T" + raceTime
                         );
 
-                if(raceDate.isBefore(today)){
+                LocalDateTime localRaceTime =
+                        raceDateTime
+                                .atZoneSameInstant(
+                                        java.time.ZoneId.systemDefault()
+                                )
+                                .toLocalDateTime();
+
+                if(localRaceTime.isBefore(now)){
 
                     racesCompleted++;
 
-                } else {
+                }else{
 
                     nextRace = race;
 
                     break;
+
                 }
             }
 
@@ -341,6 +361,11 @@ public class DriverSyncService {
                 result.put(
                         "raceDate",
                         nextRace.path("date").asText()
+                );
+
+                result.put(
+                        "raceTime",
+                        nextRace.path("time").asText()
                 );
             }
 
@@ -372,5 +397,94 @@ public class DriverSyncService {
 
     private final ObjectMapper objectMapper =
             new ObjectMapper();
+
+    private void updateFantasyPrice(
+            Driver driver,
+            int leaderPoints,
+            int highestWins,
+            int highestPodiums,
+            int highestPoles,
+            int highestFastestLaps,
+            int newPoints,
+            int newWins,
+            int newPodiums,
+            int newPoles,
+            int newFastestLaps
+    ){
+
+        double rating = 0;
+
+// Championship points contribute the most
+        rating += newPoints * 0.12;
+
+// Race wins
+        rating += newWins * 8;
+
+        rating += newPodiums * 3;
+
+        rating += newPoles * 2;
+
+        rating += newFastestLaps * 1.5;
+
+        rating = Math.min(rating, 100);
+
+        driver.setPerformanceScore(rating);
+
+        double previousRating = driver.getLastPerformanceScore();
+
+        double ratingDifference = rating - previousRating;
+
+        double change = ratingDifference * 0.15;
+
+        if (change > 0.3) {
+            change = 0.3;
+        }
+
+        if (change < -0.3) {
+            change = -0.3;
+        }
+
+        double targetPrice = 5 + (Math.sqrt(rating / 100.0) * 25);
+        double currentPrice = driver.getCost();
+
+        double difference = targetPrice - currentPrice;
+
+        if (difference > 0.3) {
+            change = 0.3;
+        }
+        else if (difference < -0.3) {
+            change = -0.3;
+        }
+        else {
+            change = difference;
+        }
+
+        double updatedPrice = currentPrice + change;
+
+        if (updatedPrice < 5) {
+            updatedPrice = 5;
+        }
+
+        if (updatedPrice > 30) {
+            updatedPrice = 30;
+        }
+
+        updatedPrice = Math.round(updatedPrice * 10.0) / 10.0;
+        change = Math.round(change * 10.0) / 10.0;
+
+        driver.setPriceChange(change);
+        driver.setCost(updatedPrice);
+
+        driver.setLastPerformanceScore(rating);
+
+        driver.setLastWins(newWins);
+
+        driver.setLastPodiums(newPodiums);
+
+        driver.setLastPoles(newPoles);
+
+        driver.setLastFastestLaps(newFastestLaps);
+
+    }
 
 }

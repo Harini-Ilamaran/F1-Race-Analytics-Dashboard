@@ -6,6 +6,9 @@ import com.f1dashboard.backend.entity.Driver;
 import com.f1dashboard.backend.repository.DriverRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.f1dashboard.backend.entity.Constructor;
+import com.f1dashboard.backend.repository.ConstructorRepository;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/fantasy")
@@ -14,6 +17,8 @@ public class FantasyTeamController {
 
     @Autowired
     private DriverRepository driverRepository;
+    @Autowired
+    private ConstructorRepository constructorRepository;
 
     private static final double BUDGET = 100.0;
 
@@ -21,75 +26,33 @@ public class FantasyTeamController {
     public FantasyTeamResponse buildTeam(
             @RequestBody FantasyTeamRequest request) {
 
-        Driver driver1 =
-                driverRepository.findById(
-                                request.getDriver1Id())
-                        .orElseThrow();
+        List<Driver> selectedDrivers =
+                driverRepository.findAllById(
+                        List.of(
+                                request.getDriver1Id(),
+                                request.getDriver2Id()
+                        )
+                );
 
-        Driver driver2 =
-                driverRepository.findById(
-                                request.getDriver2Id())
-                        .orElseThrow();
-
-        double constructorCost;
-        int constructorPoints;
-
-        switch (request.getConstructorName()) {
-
-            case "McLaren":
-                constructorCost = 30;
-                constructorPoints = 374;
-                break;
-
-            case "Ferrari":
-                constructorCost = 28;
-                constructorPoints = 285;
-                break;
-
-            case "Mercedes":
-                constructorCost = 25;
-                constructorPoints = 199;
-                break;
-
-            case "Red Bull Racing":
-                constructorCost = 26;
-                constructorPoints = 203;
-                break;
-
-            case "Williams":
-                constructorCost = 18;
-                constructorPoints = 98;
-                break;
-
-            case "Aston Martin":
-                constructorCost = 17;
-                constructorPoints = 78;
-                break;
-
-            case "RB":
-                constructorCost = 16;
-                constructorPoints = 40;
-                break;
-
-            case "Haas":
-                constructorCost = 15;
-                constructorPoints = 35;
-                break;
-
-            case "Alpine":
-                constructorCost = 14;
-                constructorPoints = 30;
-                break;
-
-            case "Kick Sauber":
-                constructorCost = 12;
-                constructorPoints = 29;
-                break;
-
-            default:
-                constructorCost = 20;
-                constructorPoints = 50;
+        if(selectedDrivers.size() != 2){
+            throw new RuntimeException("Driver not found");
         }
+
+        Driver driver1 = selectedDrivers.get(0);
+        Driver driver2 = selectedDrivers.get(1);
+
+        Constructor constructor =
+                constructorRepository.findByName(
+                        request.getConstructorName()
+                );
+
+        if (constructor == null) {
+            throw new RuntimeException("Constructor not found");
+        }
+
+        double constructorCost = constructor.getCost();
+
+        int constructorPoints = constructor.getPoints();
 
         double totalCost =
                 driver1.getCost()
@@ -106,8 +69,8 @@ public class FantasyTeamController {
 
         String status =
                 totalCost <= BUDGET
-                        ? "VALID TEAM ✅"
-                        : "OVER BUDGET ❌";
+                        ? "VALID TEAM ✓"
+                        : "OVER BUDGET X";
 
         return new FantasyTeamResponse(
                 totalCost,

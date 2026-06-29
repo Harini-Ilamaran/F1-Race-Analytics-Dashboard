@@ -75,6 +75,25 @@ public class ConstructorSyncService {
                 constructor.setWins(wins);
                 constructor.setNationality(nationality);
 
+                double performanceScore =
+                        (points * 0.80) +
+                                (wins * 20);
+
+                double price =
+                        5 + (performanceScore / 30);
+
+                if(price > 35){
+                    price = 35;
+                }
+
+                if(price < 5){
+                    price = 5;
+                }
+
+                price = Math.round(price * 10.0) / 10.0;
+
+                constructor.setCost(price);
+
                 constructorRepository.save(constructor);
 
                 System.out.println(

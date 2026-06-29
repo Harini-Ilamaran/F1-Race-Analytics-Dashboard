@@ -93,15 +93,15 @@ async function simulatePitStop() {
     ).innerHTML =
 
         `
-        <strong>Strategy:</strong>
+        <h2>Strategy:</h2>
         ${result.strategy}
         <br><br>
 
-        <strong>Pit Window:</strong>
+        <h2>Pit Window:</h2>
         ${result.pitWindow}
         <br><br>
 
-        <strong>Estimated Finish:</strong>
+        <h2>Estimated Finish:</h2>
         ${result.estimatedFinish}
         `;
 }
@@ -134,17 +134,17 @@ async function updateTyreAnalysis(tireCode){
     ).innerHTML =
 
         `
-        <strong>Performance Decline:</strong>
+        <p>Performance Decline:</p>
         ${result.performanceDecline}
 
         <br><br>
 
-        <strong>Tyre Life:</strong>
+        <p>Tyre Life:</p>
         ${result.tireLife}
 
         <br><br>
 
-        <strong>Recommended Pit Window:</strong>
+        <p>Recommended Pit Window:</p>
         ${result.pitWindow}
         `;
 }

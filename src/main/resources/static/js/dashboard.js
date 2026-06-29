@@ -527,7 +527,7 @@ fetch(
 
         raceDate =
             new Date(
-                race.raceDate + "T15:00:00"
+                race.raceDate + "T" + race.raceTime
             );
 
         updateCountdown();

@@ -50,73 +50,93 @@
 </nav>
 </div>
 
-<section class="page-banner">
-    <h2>Fantasy Team Builder</h2>
-    <p>
-        Build your dream Formula 1 team.
-    </p>
+<section class="page-hero">
+
+    <div class="page-overlay">
+
+        <h1>
+            FANTASY TEAM
+            <span>BUILDER</span>
+        </h1>
+
+        <p>
+            Build your dream Formula 1 team
+        </p>
+
+    </div>
 
 </section>
 
-<section class="table-section">
 
-    <h2>Budget: $100M</h2>
+<section class="fantasy-container">
 
-    <br>
+    <div class="team-builder">
 
-    <select id="driver1">
+        <div class="budget-panel">
 
-    </select>
+            <h3>Budget Remaining</h3>
 
-    <br><br>
+            <div class="budget-bar">
+                <div id="budgetFill"></div>
+            </div>
 
-    <select id="driver2">
+            <span id="budgetText">$100M</span>
 
-    </select>
+        </div>
 
-    <br><br>
+        <div class="selected-team">
 
-    <select id="constructor">
+            <div id="driverSlot1" class="selection-slot">
+                <span>＋</span>
+                <p>Add Driver</p>
+            </div>
 
-        <option value="McLaren">McLaren</option>
+            <div id="driverSlot2" class="selection-slot">
+                <span>＋</span>
+                <p>Add Driver</p>
+            </div>
 
-        <option value="Ferrari">Ferrari</option>
+            <div class="slot-divider"></div>
 
-        <option value="Mercedes">Mercedes</option>
+            <div id="constructorSlot" class="selection-slot">
+                <span>＋</span>
+                <p>Add Constructor</p>
+            </div>
 
-        <option value="Red Bull Racing">Red Bull Racing</option>
+        </div>
 
-        <option value="Aston Martin">Aston Martin</option>
+        <div id="analysisCard" class="analysis-card">
 
-        <option value="Alpine">Alpine</option>
+            Waiting for team selection...
 
-        <option value="Haas">Haas</option>
+        </div>
 
-        <option value="Williams">Williams</option>
+    </div>
 
-        <option value="RB">RB</option>
+    <div class="selection-panel">
 
-        <option value="Kick Sauber">Kick Sauber</option>
+        <div class="tab-header">
 
-    </select>
+            <button id="driversTab">
+                Drivers
+            </button>
 
-    <br><br>
+            <button id="constructorsTab">
+                Constructors
+            </button>
 
-    <button onclick="buildFantasyTeam()">
-        Build Team
-    </button>
+        </div>
 
-</section>
+        <input
+                id="searchBox"
+                type="text"
+                placeholder="Search">
 
-<section class="leader-card">
+        <div id="selectionList">
 
-    <h2>Fantasy Team Result</h2>
+        </div>
 
-    <p id="fantasyResult">
-
-        Waiting for team selection...
-
-    </p>
+    </div>
 
 </section>
 
