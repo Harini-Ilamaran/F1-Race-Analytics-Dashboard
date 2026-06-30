@@ -312,7 +312,7 @@ td{
     }
 
     .menu-toggle{
-        font-size: 28px;
+        font-size: 30px;
     }
 }
 
@@ -2007,6 +2007,7 @@ body.no-scroll{
 
     .selection-slot{
         cursor:pointer;
+        padding-bottom: 10px;
     }
 
     .mobile-sheet{
@@ -2084,6 +2085,23 @@ body.no-scroll{
 
     .selected-driver{
         gap: 10px;
+    }
+
+    .analysis-container{
+        gap: 40px;
+    }
+
+    .recommend-card{
+        width: 100%;
+        margin: auto;
+    }
+
+    .watchLive-card{
+        padding: 30px;
+    }
+
+    .page-overlay{
+        padding-left: 35px;
     }
 
 }
