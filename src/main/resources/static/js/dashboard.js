@@ -235,7 +235,7 @@ fetch("/api/drivers")
     .then(drivers => {
 
         drivers.sort(
-            (a,b)=> b.points - a.points
+            (a, b) => b.points - a.points
         );
 
         document.getElementById(
@@ -273,7 +273,7 @@ fetch("/api/drivers")
 
         let maxWinsDriver =
             drivers.reduce(
-                (max,current)=>
+                (max, current) =>
                     current.wins > max.wins
                         ? current
                         : max
@@ -284,7 +284,7 @@ fetch("/api/drivers")
             .then(constructors => {
 
                 constructors.sort(
-                    (a,b) => b.points - a.points
+                    (a, b) => b.points - a.points
                 );
 
                 const leaderTeam =
@@ -312,13 +312,13 @@ fetch("/api/drivers")
         let openedCard = null;
 
         drivers.forEach(
-            (driver,index)=>{
+            (driver, index) => {
 
                 let row =
                     document.createElement("tr");
 
                 row.innerHTML = `
-    <td>${index+1}</td>
+    <td>${index + 1}</td>
 
     <td>
         ${driver.name}
@@ -410,18 +410,18 @@ fetch("/api/drivers")
                     "click",
                     () => {
 
-                        if(
+                        if (
                             openedCard &&
                             openedCard !== detailRow
-                        ){
+                        ) {
                             openedCard.style.display =
                                 "none";
                         }
 
-                        if(
+                        if (
                             detailRow.style.display ===
                             "table-row"
-                        ){
+                        ) {
 
                             detailRow.style.display =
                                 "none";
@@ -444,9 +444,9 @@ fetch("/api/drivers")
 
 let raceDate;
 
-function updateCountdown(){
+function updateCountdown() {
 
-    if(!raceDate){
+    if (!raceDate) {
         return;
     }
 
@@ -544,7 +544,7 @@ fetch("/api/constructors")
     .then(constructors => {
 
         constructors.sort(
-            (a,b) => b.points - a.points
+            (a, b) => b.points - a.points
         );
 
         console.log(

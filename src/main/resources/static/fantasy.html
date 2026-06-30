@@ -86,19 +86,28 @@
 
         <div class="selected-team">
 
-            <div id="driverSlot1" class="selection-slot">
+            <div
+                    id="driverSlot1"
+                    class="selection-slot"
+                    onclick="handleDriverSlotClick()">
                 <span>＋</span>
                 <p>Add Driver</p>
             </div>
 
-            <div id="driverSlot2" class="selection-slot">
+            <div
+                    id="driverSlot2"
+                    class="selection-slot"
+                    onclick="handleDriverSlotClick()">
                 <span>＋</span>
                 <p>Add Driver</p>
             </div>
 
             <div class="slot-divider"></div>
 
-            <div id="constructorSlot" class="selection-slot">
+            <div
+                    id="constructorSlot"
+                    class="selection-slot"
+                    onclick="handleConstructorSlotClick()">
                 <span>＋</span>
                 <p>Add Constructor</p>
             </div>
@@ -139,6 +148,47 @@
     </div>
 
 </section>
+
+<div id="mobileOverlay" class="mobile-overlay">
+
+    <div class="mobile-sheet">
+
+        <div class="sheet-header">
+
+            <h2 id="sheetTitle">
+                Select Driver
+            </h2>
+
+            <button
+                    id="closeSheet"
+                    class="close-sheet">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <input
+                type="text"
+                id="mobileSearchBox"
+                placeholder="Search...">
+
+        <div id="mobileSelectionList">
+
+        </div>
+
+        <button
+                id="cancelSheet"
+                class="cancel-sheet">
+
+            Cancel
+
+        </button>
+
+    </div>
+
+</div>
 
 <script src="js/fantasy.js"></script>
 <script src="js/navigation.js"></script>

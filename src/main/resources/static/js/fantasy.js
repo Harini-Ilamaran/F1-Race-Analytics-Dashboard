@@ -3,6 +3,7 @@ let constructors = [];
 
 let selectedDrivers = [];
 let selectedConstructor = null;
+let currentSelectionType = "driver";
 
 Promise.all([
 
@@ -38,7 +39,7 @@ function renderDrivers(search = "") {
 
     drivers.forEach(driver => {
 
-        if(!driver.name.toLowerCase().includes(search)){
+        if (!driver.name.toLowerCase().includes(search)) {
             return;
         }
 
@@ -103,7 +104,7 @@ function renderConstructors(search = "") {
 
     constructors.forEach(constructor => {
 
-        if(!constructor.name.toLowerCase().includes(search)){
+        if (!constructor.name.toLowerCase().includes(search)) {
             return;
         }
 
@@ -151,16 +152,124 @@ function renderConstructors(search = "") {
 
 }
 
-function selectDriver(driverId){
+function renderMobileDrivers(search = "") {
+
+    const list = document.getElementById("mobileSelectionList");
+
+    list.innerHTML = "";
+
+    drivers.forEach(driver => {
+
+        if (!driver.name.toLowerCase().includes(search)) {
+            return;
+        }
+
+        const alreadySelected =
+            selectedDrivers.some(d => d.id === driver.id);
+
+        list.innerHTML += `
+
+        <div class="driver-row">
+
+            <div class="fantasy-driver-left">
+
+                <img
+                    src="images/drivers/${driver.imageFile}"
+                    class="driver-photo">
+
+                <div class="driver-details">
+
+                    <h3>${driver.name}</h3>
+
+                    <div class="driver-price">
+
+                        $${driver.cost}M
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                class="add-btn"
+                onclick="selectDriver(${driver.id})"
+                ${alreadySelected ? "disabled" : ""}>
+
+                ${alreadySelected ? "✓" : "+"}
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function renderMobileConstructors(search = "") {
+
+    const list = document.getElementById("mobileSelectionList");
+
+    list.innerHTML = "";
+
+    constructors.forEach(constructor => {
+
+        if (!constructor.name.toLowerCase().includes(search)) {
+            return;
+        }
+
+        list.innerHTML += `
+
+        <div class="driver-row">
+
+            <div class="fantasy-driver-left">
+
+                <img
+                    src="images/teams/${constructor.imageFile}"
+                    class="constructor-photo">
+
+                <div class="driver-details">
+
+                    <h3>${constructor.name.replace(" F1 Team", "")}</h3>
+
+                    <div class="driver-price">
+
+                        $${constructor.cost}M
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                class="add-btn"
+                onclick="selectConstructor(${constructor.id})">
+
+                +
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function selectDriver(driverId) {
 
     const driver = drivers.find(d => d.id === driverId);
 
-    if(!driver){
+    if (!driver) {
         return;
     }
 
     // Don't allow duplicates
-    if(selectedDrivers.some(d => d.id === driver.id)){
+    if (selectedDrivers.some(d => d.id === driver.id)) {
 
         alert("Driver already selected.");
 
@@ -169,7 +278,7 @@ function selectDriver(driverId){
     }
 
     // Maximum 2 drivers
-    if(selectedDrivers.length >= 2){
+    if (selectedDrivers.length >= 2) {
         alert("You can only select two drivers.");
         return;
     }
@@ -178,7 +287,7 @@ function selectDriver(driverId){
 
     const btn = document.getElementById("driverBtn" + driver.id);
 
-    if(btn){
+    if (btn) {
 
         btn.innerHTML = "✓";
 
@@ -190,14 +299,20 @@ function selectDriver(driverId){
     updateBudget();
     buildFantasyTeam();
 
+    if (window.innerWidth <= 768) {
+
+        closeMobileSheet();
+
+    }
+
 }
 
-function updateDriverSlots(){
+function updateDriverSlots() {
 
     const slot1 = document.getElementById("driverSlot1");
     const slot2 = document.getElementById("driverSlot2");
 
-    if(selectedDrivers.length >= 1){
+    if (selectedDrivers.length >= 1) {
 
         slot1.innerHTML = `
 
@@ -233,7 +348,7 @@ function updateDriverSlots(){
 
 `;
 
-    }else{
+    } else {
 
         slot1.innerHTML = `
             <span>＋</span>
@@ -241,7 +356,7 @@ function updateDriverSlots(){
         `;
     }
 
-    if(selectedDrivers.length >= 2){
+    if (selectedDrivers.length >= 2) {
 
         slot2.innerHTML = `
 
@@ -277,7 +392,7 @@ function updateDriverSlots(){
 
 `;
 
-    }else{
+    } else {
 
         slot2.innerHTML = `
             <span>＋</span>
@@ -287,7 +402,7 @@ function updateDriverSlots(){
 
 }
 
-function updateBudget(){
+function updateBudget() {
 
     let total = 0;
 
@@ -297,7 +412,7 @@ function updateBudget(){
 
     });
 
-    if(selectedConstructor){
+    if (selectedConstructor) {
 
         total += selectedConstructor.cost;
 
@@ -313,9 +428,9 @@ function updateBudget(){
 
 }
 
-async function buildFantasyTeam(){
+async function buildFantasyTeam() {
 
-    if(selectedDrivers.length !== 2 || !selectedConstructor){
+    if (selectedDrivers.length !== 2 || !selectedConstructor) {
 
         document.getElementById("analysisCard").innerHTML =
             "Select two drivers and one constructor.";
@@ -334,15 +449,15 @@ async function buildFantasyTeam(){
     };
 
     let response =
-        await fetch("/api/fantasy",{
+        await fetch("/api/fantasy", {
 
-            method:"POST",
+            method: "POST",
 
-            headers:{
-                "Content-Type":"application/json"
+            headers: {
+                "Content-Type": "application/json"
             },
 
-            body:JSON.stringify(requestBody)
+            body: JSON.stringify(requestBody)
 
         });
 
@@ -381,16 +496,16 @@ async function buildFantasyTeam(){
 
 }
 
-function removeDriver(index){
+function removeDriver(index) {
 
     const removedDriver = selectedDrivers[index];
 
-    selectedDrivers.splice(index,1);
+    selectedDrivers.splice(index, 1);
 
     const btn =
         document.getElementById("driverBtn" + removedDriver.id);
 
-    if(btn){
+    if (btn) {
 
         btn.innerHTML = "+";
 
@@ -406,22 +521,22 @@ function removeDriver(index){
 
 }
 
-function selectConstructor(constructorId){
+function selectConstructor(constructorId) {
 
     const constructor =
         constructors.find(c => c.id === constructorId);
 
-    if(!constructor){
+    if (!constructor) {
         return;
     }
 
     // Enable the previously selected constructor button
-    if(selectedConstructor){
+    if (selectedConstructor) {
 
         const oldBtn =
             document.getElementById("constructorBtn" + selectedConstructor.id);
 
-        if(oldBtn){
+        if (oldBtn) {
 
             oldBtn.innerHTML = "+";
             oldBtn.disabled = false;
@@ -435,7 +550,7 @@ function selectConstructor(constructorId){
     const btn =
         document.getElementById("constructorBtn" + constructor.id);
 
-    if(btn){
+    if (btn) {
 
         btn.innerHTML = "✓";
         btn.disabled = true;
@@ -448,14 +563,20 @@ function selectConstructor(constructorId){
 
     buildFantasyTeam();
 
+    if (window.innerWidth <= 768) {
+
+        closeMobileSheet();
+
+    }
+
 }
 
-function updateConstructorSlot(){
+function updateConstructorSlot() {
 
     const slot =
         document.getElementById("constructorSlot");
 
-    if(selectedConstructor){
+    if (selectedConstructor) {
 
         slot.innerHTML = `
 
@@ -493,9 +614,7 @@ function updateConstructorSlot(){
 
         `;
 
-    }
-
-    else{
+    } else {
 
         slot.innerHTML = `
 
@@ -509,14 +628,14 @@ function updateConstructorSlot(){
 
 }
 
-function removeConstructor(){
+function removeConstructor() {
 
-    if(selectedConstructor){
+    if (selectedConstructor) {
 
         const btn =
             document.getElementById("constructorBtn" + selectedConstructor.id);
 
-        if(btn){
+        if (btn) {
 
             btn.innerHTML = "+";
             btn.disabled = false;
@@ -532,6 +651,61 @@ function removeConstructor(){
     updateBudget();
 
     buildFantasyTeam();
+
+}
+
+function openMobileSheet(type) {
+
+    currentSelectionType = type;
+
+    document.body.classList.add("no-scroll");
+
+    document.getElementById("mobileOverlay").style.display = "flex";
+
+    document.getElementById("sheetTitle").innerHTML =
+        type === "driver"
+            ? "Select Driver"
+            : "Select Constructor";
+
+    document.getElementById("mobileSearchBox").value = "";
+
+    if (type === "driver") {
+
+        renderMobileDrivers();
+
+    } else {
+
+        renderMobileConstructors();
+
+    }
+
+}
+
+function closeMobileSheet() {
+
+    document.body.classList.remove("no-scroll");
+
+    document.getElementById("mobileOverlay").style.display = "none";
+
+}
+
+function handleDriverSlotClick() {
+
+    if (window.innerWidth <= 768) {
+
+        openMobileSheet("driver");
+
+    }
+
+}
+
+function handleConstructorSlotClick() {
+
+    if (window.innerWidth <= 768) {
+
+        openMobileSheet("constructor");
+
+    }
 
 }
 
@@ -557,19 +731,57 @@ document.getElementById("constructorsTab").addEventListener("click", () => {
 
 });
 
-document.getElementById("searchBox").addEventListener("input", function(){
+document.getElementById("searchBox").addEventListener("input", function () {
 
     const search =
         this.value.toLowerCase();
 
-    if(document.getElementById("driversTab").classList.contains("active")){
+    if (document.getElementById("driversTab").classList.contains("active")) {
 
         renderDrivers(search);
 
-    }else{
+    } else {
 
         renderConstructors(search);
 
     }
 
 });
+
+const closeSheetBtn = document.getElementById("closeSheet");
+
+if (closeSheetBtn) {
+
+    closeSheetBtn.addEventListener("click", closeMobileSheet);
+
+}
+
+const cancelSheetBtn = document.getElementById("cancelSheet");
+
+if (cancelSheetBtn) {
+
+    cancelSheetBtn.addEventListener("click", closeMobileSheet);
+
+}
+
+const mobileSearchBox = document.getElementById("mobileSearchBox");
+
+if (mobileSearchBox) {
+
+    mobileSearchBox.addEventListener("input", function () {
+
+        const search = this.value.toLowerCase();
+
+        if (currentSelectionType === "driver") {
+
+            renderMobileDrivers(search);
+
+        } else {
+
+            renderMobileConstructors(search);
+
+        }
+
+    });
+
+}

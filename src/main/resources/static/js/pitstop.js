@@ -1,38 +1,38 @@
 const tyres = [
 
     {
-        code:"SOFT",
-        name:"SOFT TYRE",
-        image:"images/tyres/soft-tyres.png",
-        description:"Maximum grip, quick degradation."
+        code: "SOFT",
+        name: "SOFT TYRE",
+        image: "images/tyres/soft-tyres.png",
+        description: "Maximum grip, quick degradation."
     },
 
     {
-        code:"MEDIUM",
-        name:"MEDIUM TYRE",
-        image:"images/tyres/medium-tyres.png",
-        description:"Balanced speed and durability."
+        code: "MEDIUM",
+        name: "MEDIUM TYRE",
+        image: "images/tyres/medium-tyres.png",
+        description: "Balanced speed and durability."
     },
 
     {
-        code:"HARD",
-        name:"HARD TYRE",
-        image:"images/tyres/hard-tyres.png",
-        description:"Endurance, stable but less grip."
+        code: "HARD",
+        name: "HARD TYRE",
+        image: "images/tyres/hard-tyres.png",
+        description: "Endurance, stable but less grip."
     },
 
     {
-        code:"INTERMEDIATE",
-        name:"INTERMEDIATE TYRE",
-        image:"images/tyres/intermediate-tyres.png",
-        description:"Versatile wet condition performance."
+        code: "INTERMEDIATE",
+        name: "INTERMEDIATE TYRE",
+        image: "images/tyres/intermediate-tyres.png",
+        description: "Versatile wet condition performance."
     },
 
     {
-        code:"FULL_WET",
-        name:"FULL WET TYRE",
-        image:"images/tyres/fullwet-tyres.png",
-        description:"Extreme rain grip, displaces water."
+        code: "FULL_WET",
+        name: "FULL WET TYRE",
+        image: "images/tyres/fullwet-tyres.png",
+        description: "Extreme rain grip, displaces water."
     }
 
 ];
@@ -106,21 +106,21 @@ async function simulatePitStop() {
         `;
 }
 
-async function updateTyreAnalysis(tireCode){
+async function updateTyreAnalysis(tireCode) {
 
     let response =
         await fetch(
             "/api/tire",
             {
-                method:"POST",
+                method: "POST",
 
-                headers:{
-                    "Content-Type":"application/json"
+                headers: {
+                    "Content-Type": "application/json"
                 },
 
-                body:JSON.stringify({
+                body: JSON.stringify({
 
-                    tireType:tireCode
+                    tireType: tireCode
 
                 })
             }
@@ -149,7 +149,7 @@ async function updateTyreAnalysis(tireCode){
         `;
 }
 
-function updateTyreCard(){
+function updateTyreCard() {
 
     const center = tyres[currentTyre];
 
@@ -220,9 +220,9 @@ document.getElementById(
 
         currentTyre++;
 
-        if(
+        if (
             currentTyre >= tyres.length
-        ){
+        ) {
             currentTyre = 0;
         }
 
@@ -238,9 +238,9 @@ document.getElementById(
 
         currentTyre--;
 
-        if(
+        if (
             currentTyre < 0
-        ){
+        ) {
             currentTyre =
                 tyres.length - 1;
         }

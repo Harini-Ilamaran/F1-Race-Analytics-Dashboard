@@ -1,4 +1,4 @@
-function getLogo(teamName){
+function getLogo(teamName) {
 
     const logos = {
 
@@ -44,7 +44,7 @@ fetch("/api/constructors")
     .then(data => {
 
         data.sort(
-            (a,b) => b.points - a.points
+            (a, b) => b.points - a.points
         );
 
         let table =
@@ -63,12 +63,12 @@ fetch("/api/constructors")
             `;
 
         data.forEach(
-            (team,index) => {
+            (team, index) => {
 
                 table.innerHTML +=
                     `
                     <tr>
-                        <td>${index+1}</td>
+                        <td>${index + 1}</td>
                         <td>
     <img
         src="${getLogo(team.name)}"
@@ -82,7 +82,6 @@ fetch("/api/constructors")
                     </tr>
                     `;
             }
-
         );
     });
 

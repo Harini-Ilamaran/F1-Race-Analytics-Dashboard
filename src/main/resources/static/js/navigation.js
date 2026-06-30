@@ -4,7 +4,7 @@ const menuToggle =
 const navbar =
     document.getElementById("navbar");
 
-if(menuToggle && navbar){
+if (menuToggle && navbar) {
 
     menuToggle.addEventListener(
         "click",
@@ -14,10 +14,9 @@ if(menuToggle && navbar){
                 "active"
             );
 
-            if(navbar.classList.contains("active")){
+            if (navbar.classList.contains("active")) {
                 menuToggle.innerHTML = "✕";
-            }
-            else{
+            } else {
                 menuToggle.innerHTML = "☰";
             }
         }

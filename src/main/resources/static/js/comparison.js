@@ -47,7 +47,7 @@ fetch("/api/drivers")
 
 let chart;
 
-function compareDrivers(){
+function compareDrivers() {
 
     let id1 =
         document.getElementById(
@@ -59,7 +59,7 @@ function compareDrivers(){
             "driver2"
         ).value;
 
-    if(id1 == id2){
+    if (id1 == id2) {
 
         alert(
             "Please select two different drivers."
@@ -143,18 +143,18 @@ function compareDrivers(){
             "comparisonChart"
         );
 
-    if(chart){
+    if (chart) {
         chart.destroy();
     }
 
     chart =
-        new Chart(ctx,{
+        new Chart(ctx, {
 
-            type:'bar',
+            type: 'bar',
 
-            data:{
+            data: {
 
-                labels:[
+                labels: [
                     'Wins',
                     'Podiums',
                     'Poles',
@@ -162,11 +162,11 @@ function compareDrivers(){
                     'Points'
                 ],
 
-                datasets:[
+                datasets: [
                     {
-                        label:d1.name,
+                        label: d1.name,
 
-                        data:[
+                        data: [
                             d1.wins,
                             d1.podiums,
                             d1.poles,
@@ -177,9 +177,9 @@ function compareDrivers(){
                     },
 
                     {
-                        label:d2.name,
+                        label: d2.name,
 
-                        data:[
+                        data: [
                             d2.wins,
                             d2.podiums,
                             d2.poles,
@@ -191,30 +191,30 @@ function compareDrivers(){
                 ]
             },
 
-            options:{
-                responsive:true,
-                maintainAspectRatio:false,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
 
-                plugins:{
-                    legend:{
-                        labels:{
-                            color:'white'
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
                         }
                     }
                 },
 
-                scales:{
-                    x:{
-                        ticks:{
-                            color:'white'
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white'
                         }
                     },
 
-                    y:{
-                        beginAtZero:true,
+                    y: {
+                        beginAtZero: true,
 
-                        ticks:{
-                            color:'white'
+                        ticks: {
+                            color: 'white'
                         }
                     }
                 }
