@@ -93,15 +93,15 @@ async function simulatePitStop() {
     ).innerHTML =
 
         `
-        <h2>Strategy:</h2>
+        <p>Strategy:</p>
         ${result.strategy}
         <br><br>
 
-        <h2>Pit Window:</h2>
+        <p>Pit Window:</p>
         ${result.pitWindow}
         <br><br>
 
-        <h2>Estimated Finish:</h2>
+        <p>Estimated Finish:</p>
         ${result.estimatedFinish}
         `;
 }
